@@ -15,7 +15,7 @@ Follow these instructions to get a copy of the project running on your local mac
 
 1.  **Clone the repository:**
     ```bash
-    git clone [https://github.com/dangbros/3rd-year-project.git](https://github.com/dangbros/3rd-year-project.git)
+    git clone https://github.com/dangbros/3rd-year-project.git
     ```
 
 2.  **Navigate into the project directory:**
