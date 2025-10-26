@@ -27,7 +27,7 @@ try:
     # RESAMPLING THE AUDIO
     if sample_rate != 16000:
         speech = librosa.resample(y=speech, orig_sr=sample_rate, target_sr=16000)
-        sample_rate = 16000 # Update the sample rate variable
+        sample_rate = 16000 
 
     # PROCESS FOR TRANSCRIPTION(whisper-model)
     input_features = processor(speech, sampling_rate=sample_rate, return_tensors="pt").input_features
