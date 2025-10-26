@@ -73,7 +73,7 @@ This step uses the downloaded dataset files to extract features. **This takes ma
 
 ---
 
-## Part 2: Training the Model (CPU - For Project Owner)
+## Part 2: Training the Model 
 
 Once the preprocessed files (`train_features.pt` and `train_labels.pt`) are available (either from Part 1 or downloaded from GitHub using `git pull`), you can train the final model.
 
