@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.pyc
+
+# Virtual Environment files (since they are in our root)
+/bin
+/include
+/lib
+/lib64
+/share
+/pyvenv.cfg
+
+# Downloaded Data & Temp Files
+*.zip
+*.pkl
+*.pt
+train-1/
+train-2/
+train-3/
+train-4/
+train-5/
+train-6/
+train-annotation/
+train-transcription/
+temp_audio.wav
