@@ -1,10 +1,5 @@
-#
-# SCRIPT 2: train.py
-# (Runs on your machine with the CPU)
-#
 import torch
 import torch.nn as nn
-import os
 
 # --- 1. Define the Final Model Architecture ---
 # This is the "brain" that does the personality prediction

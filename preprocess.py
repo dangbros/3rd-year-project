@@ -1,7 +1,5 @@
-#
-# SCRIPT 1: preprocess.py (FULL DATASET + MANUAL DOWNLOAD)
-# (Runs on the machine with the GPU)
-#
+# SCRIPT 1: preprocess.py 
+
 import pickle
 import torch
 import librosa
@@ -9,6 +7,7 @@ from transformers import Wav2Vec2Processor, Wav2Vec2Model, BertTokenizer, BertMo
 from moviepy import VideoFileClip 
 import os
 import time
+import numpy
 
 DATA_FOLDER = 'datasets'
 
@@ -28,13 +27,18 @@ def extract_audio(video_path, output_audio_path="temp_audio.wav"):
         return None
 
 # --- Helper Function to Find Video Files ---
+# --- Helper Function to Find Video Files ---
 def find_video_file(root_search_path, video_filename):
-    # Search all the 'train-X' folders within the root path
+    """
+    Searches all subdirectories of 'root_search_path' for 'video_filename'.
+    Relies on os.walk starting from the correct root path (e.g., 'datasets').
+    """
     for dirpath, _, filenames in os.walk(root_search_path):
-        # Look only in folders that start with 'train-' (like train-1, train-2)
-        if os.path.basename(dirpath).startswith('train-'):
-            if video_filename in filenames:
-                return os.path.join(dirpath, video_filename)
+        if video_filename in filenames:
+            # Found the file, return its full path
+            return os.path.join(dirpath, video_filename)
+    
+    # If the loop finishes without finding the file, return None
     return None
 
 # --- Main Preprocessing Function ---
