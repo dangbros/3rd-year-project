@@ -1,15 +1,14 @@
-#
-# SCRIPT 3: transcribe.py (Updated for Prediction)
-#
+#main transcription and personality prediction script
 import torch
 import torch.nn as nn
 import librosa
 import soundfile as sf
 import json
 from transformers import WhisperProcessor, WhisperForConditionalGeneration, Wav2Vec2Processor, Wav2Vec2Model, BertTokenizer, BertModel
-from moviepy import VideoFileClip # Your import fix
+
 
 # --- 1. Define the Personality Model Architecture ---
+
 # This MUST match the class definition used in train.py
 class PersonalityModel(nn.Module):
     def __init__(self, input_size, output_size):
@@ -40,14 +39,14 @@ text_tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")
 text_model = BertModel.from_pretrained("bert-base-uncased")
 
 # --- Load Your Trained Personality Model ---
-INPUT_SIZE = 1536  # Must match training
-OUTPUT_SIZE = 5     # Must match training
+INPUT_SIZE = 1536  # 768 from text + 768 from audio
+OUTPUT_SIZE = 5    
 personality_model = PersonalityModel(INPUT_SIZE, OUTPUT_SIZE)
 
 # Load the saved weights
 try:
     personality_model.load_state_dict(torch.load("personality_model_final.pth"))
-    personality_model.eval() # Set the model to evaluation mode
+    personality_model.eval() # Set to evaluation mode
     print("Loaded trained personality model weights.")
 except FileNotFoundError:
     print("ERROR: personality_model_final.pth not found. Please train the model first.")

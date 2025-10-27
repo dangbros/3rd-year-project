@@ -4,23 +4,27 @@ This project uses AI models (Whisper, BERT, wav2vec2) to extract features from s
 
 ## Project Structure
 
+* `transcribe.py`: Transcribes a single audio file and predicts personality traits using a pre-trained model.
 * `preprocess.py`: Extracts text/audio features from the manually downloaded dataset (computationally intensive, GPU recommended). Assumes data is in a `datasets` subfolder.
 * `train.py`: Trains the final personality prediction model using the preprocessed features (runs quickly on CPU).
-* `transcribe.py`: Transcribes a single audio file and predicts personality traits using the trained model.
 * `requirements.txt`: Lists all necessary Python libraries.
-* `datasets/`: Folder containing the unzipped Kaggle data (created manually).
+* `datasets/`: Folder containing the unzipped Kaggle data (created manually during training setup).
+* `personality_model_final.pth`: The pre-trained model weights (created after training).
 
-## Getting Started (General Setup for Both Users)
+---
 
-1.  **Clone the repository:**
+## Running the Pre-trained Model (Inference)
+
+These instructions explain how to use the already trained model (`personality_model_final.pth`) to predict personality traits from a new audio file.
+
+### 1. Setup
+
+* **Clone the repository:**
     ```bash
-    git clone https://github.com/dangbros/3rd-year-project.git
-    ```
-2.  **Navigate into the project directory:**
-    ```bash
+    git clone [https://github.com/dangbros/3rd-year-project.git](https://github.com/dangbros/3rd-year-project.git)
     cd 3rd-year-project
     ```
-3.  **Create and activate a virtual environment:**
+* **Create and activate a virtual environment:**
     * **Linux/macOS**:
         ```bash
         python3 -m venv venv
@@ -31,57 +35,57 @@ This project uses AI models (Whisper, BERT, wav2vec2) to extract features from s
         python -m venv venv
         .\venv\Scripts\activate
         ```
-4.  **Install the required packages:**
+* **Install required packages:**
     ```bash
     pip install -r requirements.txt
     ```
+* **Ensure you have the trained model:** Make sure the file `personality_model_final.pth` is present in the main project folder. If you haven't trained it yourself, you might need to download it (e.g., using `git pull` if a collaborator trained it and pushed the file).
+
+### 2. Prepare Audio File
+
+* Place your audio file in the main project folder.
+* Rename it to `audio.wav`.
+* The audio file must be **mono** (single channel).
+
+### 3. Run Prediction
+
+* Make sure your virtual environment is active.
+* Execute the script:
+    ```bash
+    python transcribe.py
+    ```
+* The script will print the transcription and the predicted OCEAN traits in JSON format.
 
 ---
 
-## Part 1: Preprocessing (GPU Recommended - For Collaborator)
+## Training the Model (for project team members)
 
-This step uses the downloaded dataset files to extract features. **This takes many hours and requires a good GPU for reasonable speed.**
+These instructions are for training the model from scratch using the Kaggle dataset. This involves a **very long preprocessing step** (Part 1) that is best done on a computer with a **powerful GPU**.
 
-1.  **Download and Unzip Data Manually:**
+### Part 1: Preprocessing (GPU Recommended)
+
+This step downloads the large dataset (18GB) and extracts features. **This takes many hours.**
+
+1.  **General Setup:** Ensure you've completed the "Getting Started (General Setup for Both Users)" steps from above (cloning, virtual environment, installing requirements).
+2.  **Download and Unzip Data Manually:**
     * Go to the Kaggle dataset page: [https://www.kaggle.com/datasets/animesh2cool/first-impressions-v2-cvpr17-training](https://www.kaggle.com/datasets/animesh2cool/first-impressions-v2-cvpr17-training)
     * Click the **"Download (18 GB)"** button.
     * Once downloaded, **create a folder named `datasets`** inside the main project folder (`3rd-year-project`).
     * Move the downloaded `.zip` file into the new `datasets` folder.
     * **Unzip** the file *inside* the `datasets` folder. This will create folders like `train-annotation`, `train-transcription`, `train-1`, etc., within the `datasets` directory.
-
-2.  **Run the Preprocessing Script:**
+3.  **Run the Preprocessing Script:**
     * Make sure your virtual environment is active.
     * Execute the script from the main project folder:
         ```bash
         python preprocess.py
         ```
-    * This script will look inside the `datasets` folder, find the unzipped data, and start processing. Expect this to run for a **long time** (hours, potentially). It will create two files in the main project folder: `train_features.pt` and `train_labels.pt`.
+    * This script will look inside the `datasets` folder, find the unzipped data, and start processing all 6000 training files. It will create two files in the main project folder: `train_features.pt` and `train_labels.pt`.
 
-3.  **Upload the Results to GitHub:**
-    * After `preprocess.py` finishes, add the two new `.pt` files to Git:
-        ```bash
-        git add train_features.pt train_labels.pt
-        ```
-    * Commit the files:
-        ```bash
-        git commit -m "Add processed features and labels"
-        ```
-    * Push them to the repository:
-        ```bash
-        git push origin main
-        ```
+### Part 2: Training (CPU is Fine)
 
----
+Once the preprocessed files (`train_features.pt` and `train_labels.pt`) are available, you can train the final model.
 
-## Part 2: Training the Model 
-
-Once the preprocessed files (`train_features.pt` and `train_labels.pt`) are available (either from Part 1 or downloaded from GitHub using `git pull`), you can train the final model.
-
-1.  **Make sure you have the latest files:**
-    ```bash
-    git pull origin main
-    ```
-2.  **Run the Training Script:**
+1.  **Run the Training Script:**
     * Make sure your virtual environment is active.
     * Execute the script:
         ```bash
@@ -89,16 +93,14 @@ Once the preprocessed files (`train_features.pt` and `train_labels.pt`) are avai
         ```
     * This script runs quickly, loads the `.pt` files, trains the model, and saves the final weights as `personality_model_final.pth`.
 
----
+### Part 3: Uploading Results (If Collaborating)
 
-## Part 3: Running Inference
+If one person runs the preprocessing (Part 1), they need to share the results:
 
-To transcribe a new audio file and predict its personality traits using the trained model:
-
-1.  Make sure `personality_model_final.pth` exists (created by `train.py`).
-2.  Place your audio file in the main project folder and name it `audio.wav` (it should be mono).
-3.  Run the script:
+1.  **Upload the `.pt` files to GitHub:**
     ```bash
-    python transcribe.py
+    git add train_features.pt train_labels.pt
+    git commit -m "Add processed features and labels"
+    git push origin main
     ```
-4.  The script will print the transcription and the predicted OCEAN traits in JSON format.
+2.  **Upload the final model:** After running Part 2, upload

@@ -6,15 +6,11 @@ import pickle
 import torch
 import librosa
 from transformers import Wav2Vec2Processor, Wav2Vec2Model, BertTokenizer, BertModel
-from moviepy import VideoFileClip # Your import fix
+from moviepy import VideoFileClip 
 import os
 import time
-import numpy # Make sure numpy is installed
 
-# --- THIS IS THE FIX ---
-# Change 'datasets' to 'database' to match your folder name
 DATA_FOLDER = 'datasets'
-# --- END OF FIX ---
 
 LABEL_FILE_PATH = os.path.join(DATA_FOLDER, 'train-annotation/annotation_training.pkl')
 TRANS_FILE_PATH = os.path.join(DATA_FOLDER, 'train-transcription/transcription_training.pkl')
